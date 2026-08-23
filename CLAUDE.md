@@ -50,6 +50,18 @@ and multi-client productization happen.
 When adding a new API resource, the pattern is: schema → client → factory (if needed) → fixture →
 spec. Follow the `pet/` example end-to-end.
 
+## AI-assisted test generation
+
+**Implemented and available** — see [`docs/AI-TEST-GENERATION.md`](docs/AI-TEST-GENERATION.md) for
+the full contract. In short: the cached OpenAPI spec (`openapi/petstore.swagger.json`) is the
+preferred source of truth for what to generate; one operation is generated per run, in schema →
+client → factory → fixture → spec order; specs are schema-first (`Schema.parse(...)`) and
+deterministic (create-then-read-own-data, not assertions over shared/global state); an ESLint rule
+scoped to `tests/**/*.spec.ts` blocks raw `request.get/post/...` calls in specs as a hard CI gate,
+not just a review guideline; nothing is auto-committed. The `store/` resource
+(`src/schemas/store.schema.ts`, `src/api-clients/store/`, `tests/store/inventory.spec.ts`) is the
+worked reference example alongside `pet/`.
+
 ## Commands
 
 ```bash
@@ -70,9 +82,10 @@ have safe defaults (Swagger Petstore) so the suite runs out of the box without a
 
 ## Explicitly deferred (not yet implemented)
 
-- AI-assisted test generation (spec-driven client/schema/spec scaffolding). The layering above is
-  designed so this can be added later without refactoring — see the "AI-assisted test generation"
-  section of the architecture proposal discussed with the user for the intended design.
+- A fully automated generation pipeline (a script/service calling an LLM API to generate files
+  without a human driving the session). The current capability is a human-in-the-loop playbook
+  (see above) — deliberately, to keep output reviewable/deterministic and avoid adding an LLM SDK
+  dependency before the manual workflow has proven out on more than one resource.
 - Multi-environment config files (`config/env/<name>.env`) — deferred until a second real
   environment exists; today `config/env.ts` reads directly from `process.env`/`.env`.
 - Extraction into a shared `@qualnexa/api-test-core` package and a project-scaffolding CLI (future

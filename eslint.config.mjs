@@ -23,5 +23,27 @@ export default tseslint.config(
     files: ['tests/**/*.ts'],
     ...playwright.configs['flat/recommended'],
   },
+  {
+    // Guardrail for AI-assisted (and human) test generation: specs must go
+    // through an API client (src/api-clients/), never Playwright's raw
+    // `request` fixture. See docs/AI-TEST-GENERATION.md.
+    files: ['tests/**/*.spec.ts'],
+    rules: {
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "Property[key.name='request'][value.type='Identifier']",
+          message:
+            "Test specs must not use Playwright's raw `request` fixture — call an API client from src/api-clients/ instead.",
+        },
+        {
+          selector:
+            "CallExpression[callee.object.name='request'][callee.property.name=/^(get|post|put|delete|patch|head|fetch)$/]",
+          message:
+            'Test specs must not make raw HTTP calls — use an API client from src/api-clients/ instead.',
+        },
+      ],
+    },
+  },
   eslintConfigPrettier,
 );
