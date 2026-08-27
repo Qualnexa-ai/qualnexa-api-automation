@@ -42,6 +42,11 @@ export abstract class BaseClient {
     return this.assertOk(response);
   }
 
+  protected async delete(url: string): Promise<APIResponse> {
+    const response = await this.request.delete(url);
+    return this.assertOk(response);
+  }
+
   private async assertOk(response: APIResponse): Promise<APIResponse> {
     if (!response.ok()) {
       const body: unknown = await response.text().catch(() => undefined);

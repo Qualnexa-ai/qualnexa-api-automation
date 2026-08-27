@@ -34,4 +34,9 @@ export class PetClient extends BaseClient {
     const response = await this.put('pet', pet);
     return response.json();
   }
+
+  async deleteById(id: number): Promise<unknown> {
+    const response = await this.delete(`pet/${id}`);
+    return response.json();
+  }
 }
