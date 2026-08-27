@@ -23,4 +23,9 @@ export class StoreClient extends BaseClient {
     const response = await this.get(`store/order/${id}`);
     return response.json();
   }
+
+  async deleteById(id: number): Promise<unknown> {
+    const response = await this.delete(`store/order/${id}`);
+    return response.json();
+  }
 }
