@@ -29,4 +29,9 @@ export class PetClient extends BaseClient {
     const response = await this.post('pet', pet);
     return response.json();
   }
+
+  async update(pet: Pet): Promise<unknown> {
+    const response = await this.put('pet', pet);
+    return response.json();
+  }
 }

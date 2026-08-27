@@ -37,6 +37,11 @@ export abstract class BaseClient {
     return this.assertOk(response);
   }
 
+  protected async put(url: string, data: unknown): Promise<APIResponse> {
+    const response = await this.request.put(url, { data });
+    return this.assertOk(response);
+  }
+
   private async assertOk(response: APIResponse): Promise<APIResponse> {
     if (!response.ok()) {
       const body: unknown = await response.text().catch(() => undefined);
