@@ -18,4 +18,9 @@ export class StoreClient extends BaseClient {
     const response = await this.post('store/order', data);
     return response.json();
   }
+
+  async getOrderById(id: number): Promise<unknown> {
+    const response = await this.get(`store/order/${id}`);
+    return response.json();
+  }
 }
