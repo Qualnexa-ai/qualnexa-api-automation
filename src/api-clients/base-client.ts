@@ -42,6 +42,17 @@ export abstract class BaseClient {
     return this.assertOk(response);
   }
 
+  // Separate from post(): multipart/form-data bodies (file uploads) are a
+  // distinct Playwright request option from the JSON `data` used everywhere
+  // else, not something post() can express.
+  protected async postMultipart(
+    url: string,
+    multipart: Record<string, string | { name: string; mimeType: string; buffer: Buffer }>,
+  ): Promise<APIResponse> {
+    const response = await this.request.post(url, { multipart });
+    return this.assertOk(response);
+  }
+
   protected async delete(url: string): Promise<APIResponse> {
     const response = await this.request.delete(url);
     return this.assertOk(response);

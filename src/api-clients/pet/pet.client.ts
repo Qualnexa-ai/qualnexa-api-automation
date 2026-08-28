@@ -39,4 +39,29 @@ export class PetClient extends BaseClient {
     const response = await this.delete(`pet/${id}`);
     return response.json();
   }
+
+  // `file` stays optional here, matching the OpenAPI contract's own
+  // declaration — even though live verification found omitting it causes a
+  // server-side 500. Keeping it optional lets that documented defect be
+  // exercised through this client rather than bypassing it.
+  async uploadImage(
+    petId: number,
+    options: {
+      file?: { name: string; mimeType: string; buffer: Buffer };
+      additionalMetadata?: string;
+    } = {},
+  ): Promise<unknown> {
+    const multipart: Record<string, string | { name: string; mimeType: string; buffer: Buffer }> =
+      {};
+
+    if (options.file) {
+      multipart.file = options.file;
+    }
+    if (options.additionalMetadata !== undefined) {
+      multipart.additionalMetadata = options.additionalMetadata;
+    }
+
+    const response = await this.postMultipart(`pet/${petId}/uploadImage`, multipart);
+    return response.json();
+  }
 }
