@@ -2,10 +2,12 @@ import { test as base } from '@playwright/test';
 
 import { PetClient } from '../api-clients/pet/pet.client';
 import { StoreClient } from '../api-clients/store/store.client';
+import { UserClient } from '../api-clients/user/user.client';
 
 interface ApiFixtures {
   petClient: PetClient;
   storeClient: StoreClient;
+  userClient: UserClient;
 }
 
 /**
@@ -19,6 +21,9 @@ export const test = base.extend<ApiFixtures>({
   },
   storeClient: async ({ request }, use) => {
     await use(new StoreClient(request));
+  },
+  userClient: async ({ request }, use) => {
+    await use(new UserClient(request));
   },
 });
 
