@@ -18,4 +18,14 @@ export class UserClient extends BaseClient {
     const response = await this.get(`user/${username}`);
     return response.json();
   }
+
+  async update(user: User): Promise<unknown> {
+    const response = await this.put(`user/${user.username}`, user);
+    return response.json();
+  }
+
+  async deleteByUsername(username: string): Promise<unknown> {
+    const response = await this.delete(`user/${username}`);
+    return response.json();
+  }
 }
