@@ -53,6 +53,13 @@ export abstract class BaseClient {
     return this.assertOk(response);
   }
 
+  // Separate from post(): x-www-form-urlencoded bodies are a distinct
+  // Playwright request option (`form`) from the JSON `data` used elsewhere.
+  protected async postForm(url: string, form: Record<string, string>): Promise<APIResponse> {
+    const response = await this.request.post(url, { form });
+    return this.assertOk(response);
+  }
+
   protected async delete(url: string): Promise<APIResponse> {
     const response = await this.request.delete(url);
     return this.assertOk(response);

@@ -64,4 +64,21 @@ export class PetClient extends BaseClient {
     const response = await this.postMultipart(`pet/${petId}/uploadImage`, multipart);
     return response.json();
   }
+
+  async updateWithForm(
+    petId: number,
+    fields: { name?: string; status?: string },
+  ): Promise<unknown> {
+    const form: Record<string, string> = {};
+
+    if (fields.name !== undefined) {
+      form.name = fields.name;
+    }
+    if (fields.status !== undefined) {
+      form.status = fields.status;
+    }
+
+    const response = await this.postForm(`pet/${petId}`, form);
+    return response.json();
+  }
 }
