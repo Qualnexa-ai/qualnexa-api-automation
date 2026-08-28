@@ -16,6 +16,12 @@ const EnvSchema = z.object({
     .default('https://petstore.swagger.io/v2')
     .transform((url) => (url.endsWith('/') ? url : `${url}/`)),
   API_TIMEOUT_MS: z.coerce.number().int().positive().default(30_000),
+  // Optional, opt-in auth-header injection (see BaseClient). Both unset by
+  // default — every request is sent exactly as before. Together they name
+  // one header to attach to every outgoing request; the caller decides the
+  // scheme (Bearer token, API key, Basic auth, ...) via the value's format.
+  API_AUTH_HEADER_NAME: z.string().optional(),
+  API_AUTH_HEADER_VALUE: z.string().optional(),
 });
 
 export type Env = z.infer<typeof EnvSchema>;
