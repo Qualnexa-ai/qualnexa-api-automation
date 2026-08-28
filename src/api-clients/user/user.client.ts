@@ -28,4 +28,20 @@ export class UserClient extends BaseClient {
     const response = await this.delete(`user/${username}`);
     return response.json();
   }
+
+  // Unlike every other method here, GET /user/login's contract includes
+  // response headers (X-Rate-Limit, X-Expires-After), not just a body — so
+  // this is the one method that returns more than response.json(). It stays
+  // scoped to just the two documented header values, not the raw response.
+  async login(
+    username: string,
+    password: string,
+  ): Promise<{ body: unknown; rateLimit: string | null; expiresAfter: string | null }> {
+    const response = await this.get('user/login', { username, password });
+    return {
+      body: await response.json(),
+      rateLimit: response.headers()['x-rate-limit'] ?? null,
+      expiresAfter: response.headers()['x-expires-after'] ?? null,
+    };
+  }
 }
