@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const PetStatusSchema = z.enum(['available', 'pending', 'sold']);
 
 export const PetSchema = z.object({
-  id: z.number().optional(),
+  id: z.number().int().optional(),
   name: z.string(),
   category: z
     .object({

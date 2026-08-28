@@ -20,7 +20,7 @@ export const OrderStatusSchema = z.enum(['placed', 'approved', 'delivered']);
  * rather than a validation error.
  */
 export const OrderSchema = z.object({
-  id: z.number().optional(),
+  id: z.number().int().optional(),
   petId: z.number().optional(),
   quantity: z.number().int().optional(),
   shipDate: z.string().optional(),

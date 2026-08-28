@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker';
 
+import { safeId } from './safe-id';
 import type { User } from '../schemas/user.schema';
 
 /**
@@ -13,7 +14,7 @@ import type { User } from '../schemas/user.schema';
  */
 export function buildUser(overrides: Partial<User> = {}): User {
   return {
-    id: faker.number.int({ min: 1, max: 2_147_483_647 }),
+    id: safeId(),
     username: `qualnexa-${faker.string.alphanumeric({ length: 10, casing: 'lower' })}`,
     firstName: faker.person.firstName(),
     lastName: faker.person.lastName(),

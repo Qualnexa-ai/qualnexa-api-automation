@@ -32,8 +32,16 @@ test.describe('Store API - place order', () => {
     // and live verification, every Order property is optional — the server
     // accepts an empty body and defaults the unset fields itself rather than
     // rejecting it. Assert the specific live-verified defaults, not just
-    // that parsing succeeded (OrderSchema.parse already guarantees that).
-    const order = OrderSchema.parse(await storeClient.placeOrder({}));
+    // that parsing succeeded.
+    //
+    // `id` is validated separately from the rest of the schema here: with no
+    // id supplied, the server assigns its own — live-verified to sometimes
+    // exceed Number.MAX_SAFE_INTEGER (the same int64/float64 precision trap
+    // documented for Pet's id-less create in docs/API-BEHAVIOR-NOTES.md).
+    // OrderSchema.id is correctly tightened to `.int()`, so this test omits
+    // `id` from the parse rather than weakening that schema for every other
+    // caller — the exact id value isn't what this test is verifying.
+    const order = OrderSchema.omit({ id: true }).parse(await storeClient.placeOrder({}));
 
     expect(order.petId).toBe(0);
     expect(order.complete).toBe(false);

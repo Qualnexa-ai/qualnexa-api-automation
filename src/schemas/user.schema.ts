@@ -12,7 +12,7 @@ import { z } from 'zod';
  * schema doesn't invent one.
  */
 export const UserSchema = z.object({
-  id: z.number().optional(),
+  id: z.number().int().optional(),
   username: z.string().optional(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),

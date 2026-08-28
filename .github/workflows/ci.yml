@@ -4,6 +4,13 @@ on:
   push:
     branches: [main]
   pull_request:
+  # Runs the same checks against the live Petstore API on a schedule, since
+  # the target is a shared third-party sandbox whose data/behavior can drift
+  # between pushes (observed directly during Days 1-20). This is deliberately
+  # just a visible scheduled run in the Actions tab — no alerting/notification
+  # wiring is added here.
+  schedule:
+    - cron: '0 6 * * *'
 
 jobs:
   test:
@@ -23,6 +30,8 @@ jobs:
       - run: npm run lint
 
       - run: npm test
+
+      - run: npm run format:check
 
       - if: always()
         uses: actions/upload-artifact@v4
