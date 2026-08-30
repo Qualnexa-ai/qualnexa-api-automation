@@ -8,6 +8,11 @@ interface ApiFixtures {
   petClient: PetClient;
   storeClient: StoreClient;
   userClient: UserClient;
+  // A StoreClient carrying a deliberately fake, hardcoded auth header value
+  // (never a real credential) — used only to prove a declared security
+  // requirement isn't enforced (Day 29). Isolated to this one fixture; the
+  // default `storeClient` above is completely unaffected.
+  storeClientWithInvalidAuth: StoreClient;
 }
 
 /**
@@ -24,6 +29,11 @@ export const test = base.extend<ApiFixtures>({
   },
   userClient: async ({ request }, use) => {
     await use(new UserClient(request));
+  },
+  storeClientWithInvalidAuth: async ({ request }, use) => {
+    await use(
+      new StoreClient(request, { 'X-Qualnexa-Test-Auth': 'deliberately-invalid-test-value' }),
+    );
   },
 });
 

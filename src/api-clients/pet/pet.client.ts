@@ -13,10 +13,17 @@ export class PetClient extends BaseClient {
   // real-world junk data from every consumer of the demo API — it is not a
   // reliable source of schema-conformant data. Prefer create() + getById()
   // for anything that needs to assert response shape.
-  async findByStatus(status: PetStatus): Promise<unknown> {
+  async findByStatus(status: PetStatus | PetStatus[]): Promise<unknown> {
     // No leading slash: paths must be relative to `baseURL` (which ends in
     // `/`) so the URL() merge keeps the base path (e.g. `/v2`) intact.
-    const response = await this.get('pet/findByStatus', { status });
+    //
+    // The declared collectionFormat: multi (repeated status= keys) is
+    // live-verified NOT to work (Day 7) — only the first value is honored.
+    // A comma-separated single value does work as an undocumented OR
+    // filter, so an array is joined into one string here rather than
+    // widening BaseClient.get()'s params type to send repeated keys.
+    const statusParam = Array.isArray(status) ? status.join(',') : status;
+    const response = await this.get('pet/findByStatus', { status: statusParam });
     return response.json();
   }
 

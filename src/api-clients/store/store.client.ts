@@ -5,8 +5,8 @@ import type { Order } from '../../schemas/store.schema';
 
 /** Client for the Swagger Petstore `/store` resource. */
 export class StoreClient extends BaseClient {
-  constructor(request: APIRequestContext) {
-    super(request);
+  constructor(request: APIRequestContext, authOverride?: Record<string, string>) {
+    super(request, authOverride);
   }
 
   async getInventory(): Promise<unknown> {

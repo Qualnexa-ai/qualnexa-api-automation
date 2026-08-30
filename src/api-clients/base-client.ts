@@ -24,7 +24,14 @@ export class ApiError extends Error {
  * test files should never call `request.get/post` directly.
  */
 export abstract class BaseClient {
-  protected constructor(protected readonly request: APIRequestContext) {}
+  // Optional, opt-in per-instance auth-header override — used only to prove
+  // a declared security requirement isn't enforced (Day 29). Isolated to
+  // whichever client instance it's passed to; every other instance (and
+  // every instance constructed without it) behaves exactly as before.
+  protected constructor(
+    protected readonly request: APIRequestContext,
+    private readonly authOverride?: Record<string, string>,
+  ) {}
 
   protected async get(
     url: string,
@@ -76,6 +83,9 @@ export abstract class BaseClient {
   // failure message, and this doesn't even do that, to keep the value out of
   // every code path on principle.
   private authHeaders(): Record<string, string> | undefined {
+    if (this.authOverride) {
+      return this.authOverride;
+    }
     if (!env.API_AUTH_HEADER_NAME || !env.API_AUTH_HEADER_VALUE) {
       return undefined;
     }
